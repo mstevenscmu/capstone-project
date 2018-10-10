@@ -1,0 +1,40 @@
+
+
+# pip install kaggle (https://github.com/Kaggle/kaggle-api)
+# Get API token https://www.kaggle.com/$USERNAME/account
+# Copy api kaggle.json token to ~/.kaggle
+# chmod 600 ~/.kaggle/kaggle.json
+
+
+   73  kaggle datasets download -d keras/resnet50
+   74  kaggle competitions download -c state-farm-distracted-driver-detection
+   75  ls
+   76  mv driver_imgs_list.csv.zip imgs.zip capstone-project/StateFarm/
+   77  cd capstone-project/StateFarm/
+   78  ls
+   79  unzip driver_imgs_list.csv.zip
+   80  unzip imgs.zip
+   81  ls
+   82  mkdir imgs
+   83  mv test/ train/ imgs
+
+
+# kaggle competitions download -c state-farm-distracted-driver-detection
+# kaggle datasets download -d keras/resnet50
+
+# TODO Information on layout of directory structure
+# StateFarm/driver_imgs_list.csv
+# StateFarm/imgs
+# StateFarm/imgs/train
+
+
+# jupyter notebook --generate-config
+# sed -ie "s/#c.NotebookApp.ip = 'localhost'/#c.NotebookApp.ip = '*'/g" ~/.jupyter/jupyter_notebook_config.py
+# git clone https://github.com/udacity/aind2-cnn.git
+# sudo python3 -m pip install -r requirements/requirements-gpu.txt
+# conda install -c conda-forge keras
+# conda update -n base conda
+# conda install -c anaconda tensorflow-gpu
+
+# jupyter notebook --ip=0.0.0.0 --no-browser
+ 
