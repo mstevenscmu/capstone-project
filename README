@@ -1,40 +1,68 @@
+These directions apply to the following image on Amazon AWS EC2
+"Deep Learning AMI (Ubuntu) Version 10.0 (ami-e580c79d)" 
 
+localhost $ `ssh-agent`
+localhost $ ssh-add ~/.ssh/aws-private-key
+localhost $ ssh ubuntu@aws-public-ip
 
-# pip install kaggle (https://github.com/Kaggle/kaggle-api)
-# Get API token https://www.kaggle.com/$USERNAME/account
-# Copy api kaggle.json token to ~/.kaggle
-# chmod 600 ~/.kaggle/kaggle.json
+Start a tmux session to avoid Jupyter shutting down if your laptop is closed
+ubuntu@ip-172-31-18-195:~ $ tmux
 
+To set up the Kaggle API on the Amazon EC2 instance do the following.
+ubuntu@ip-172-31-18-195:~ $ pip install kaggle # (https://github.com/Kaggle/kaggle-api)
+ubuntu@ip-172-31-18-195:~ $ mkdir ~/.kaggle
+ubuntu@ip-172-31-18-195:~ $ chmod 600 ~/.kaggle
 
-   73  kaggle datasets download -d keras/resnet50
-   74  kaggle competitions download -c state-farm-distracted-driver-detection
-   75  ls
-   76  mv driver_imgs_list.csv.zip imgs.zip capstone-project/StateFarm/
-   77  cd capstone-project/StateFarm/
-   78  ls
-   79  unzip driver_imgs_list.csv.zip
-   80  unzip imgs.zip
-   81  ls
-   82  mkdir imgs
-   83  mv test/ train/ imgs
+Get API token https://www.kaggle.com/$USERNAME/account
+Copy api kaggle.json token to the ~/.kaggle directory
 
+ubuntu@ip-172-31-18-195:~ $ chmod 600 ~/.kaggle/kaggle.json
 
-# kaggle competitions download -c state-farm-distracted-driver-detection
-# kaggle datasets download -d keras/resnet50
+To set up the jupyter configuration on the Amazon EC2 instance, use the following commands
+ubuntu@ip-172-31-18-195:~ $ jupyter notebook --generate-config
+ubuntu@ip-172-31-18-195:~ $ sed -ie "s/#c.NotebookApp.ip = 'localhost'/#c.NotebookApp.ip = '*'/g" ~/.jupyter/jupyter_notebook_config.py
+ubuntu@ip-172-31-18-195:~ $ git clone https://github.com/mstevenscmu/capstone-project
+ubuntu@ip-172-31-18-195:~ $ sudo python3 -m pip install -r capstone-project/requirements/requirements-gpu.txt
+ubuntu@ip-172-31-18-195:~ $ conda install -c conda-forge keras
+ubuntu@ip-172-31-18-195:~ $ conda update -n base conda
+ubuntu@ip-172-31-18-195:~ $ conda install -c anaconda tensorflow-gpu
 
-# TODO Information on layout of directory structure
-# StateFarm/driver_imgs_list.csv
-# StateFarm/imgs
-# StateFarm/imgs/train
+To download the Kaggle data into the capstone-project directory
+ubuntu@ip-172-31-18-195:~ $ cd capstone-project 
+ubuntu@ip-172-31-18-195:~/capstone-project $ kaggle competitions download -c state-farm-distracted-driver-detection
+ubuntu@ip-172-31-18-195:~/capstone-project $ kaggle datasets download -d keras/resnet50
+ubuntu@ip-172-31-18-195:~/capstone-project $ kaggle datasets download -d gaborfodor/keras-pretrained-models
 
+Extract the downloaded Kaggle data and place in the proper part of the directory structure
+ubuntu@ip-172-31-18-195:~/capstone-project $ mv driver_imgs_list.csv.zip imgs.zip capstone-project/StateFarm/
+ubuntu@ip-172-31-18-195:~/capstone-project $ cd capstone-project/StateFarm/
+ubuntu@ip-172-31-18-195:~/capstone-project/StateFarm $ unzip driver_imgs_list.csv.zip
+ubuntu@ip-172-31-18-195:~/capstone-project/StateFarm $ unzip imgs.zip
+ubuntu@ip-172-31-18-195:~/capstone-project/StateFarm $ mkdir imgs
+ubuntu@ip-172-31-18-195:~/capstone-project/StateFarm $ mv test/ train/ imgs
 
-# jupyter notebook --generate-config
-# sed -ie "s/#c.NotebookApp.ip = 'localhost'/#c.NotebookApp.ip = '*'/g" ~/.jupyter/jupyter_notebook_config.py
-# git clone https://github.com/udacity/aind2-cnn.git
-# sudo python3 -m pip install -r requirements/requirements-gpu.txt
-# conda install -c conda-forge keras
-# conda update -n base conda
-# conda install -c anaconda tensorflow-gpu
+When the StateFarm data has been extracted and moved to the proper folder, the entire 
+directory struture will look like the following.
 
-# jupyter notebook --ip=0.0.0.0 --no-browser
- 
+ubuntu@ip-172-31-18-195:~/capstone-project$ tree -d ~/capstone-project/
+/home/ubuntu/capstone-project/
+└── StateFarm
+    └── imgs
+        ├── test
+        └── train
+            ├── c0
+            ├── c1
+            ├── c2
+            ├── c3
+            ├── c4
+            ├── c5
+            ├── c6
+            ├── c7
+            ├── c8
+            └── c9
+
+The StateFarm directory will also contain the driver_imgs_list.csv file
+
+To start the notebook on AWS, execute the command. 
+A URL will be printed, but the hostname listed must be replaced with the public IP address provided by AWS
+ubuntu@ip-172-31-18-195:~/capstone-project$ jupyter notebook --ip=0.0.0.0 --no-browser
