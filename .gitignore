@@ -1,2 +1,4 @@
 StateFarm/
 resnet*
+weights/*
+analysis/*
